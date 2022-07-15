@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz </title>
+    <style>
+        h2 {
+            color: firebrick;
+            font-weight: bolder;
+
+        }
+
+        body {
+
+            margin-left: 50px;
+            background-color: lightblue;
+            font-size: 20px;
+            font-family: sans-serif;
+            color: #333;
+
+        }
+
+        .question {
+            font-size: 30px;
+            color: black;
+
+            font-weight: 100;
+        }
+
+
+        #submit {
+            margin-top: 20px;
+            font-family: sans-serif;
+            font-size: 20px;
+            background-color: #297;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px;
+            cursor: pointer;
+            margin-bottom: 20px;
+
+        }
+
+        #next {
+            cursor: pointer;
+            border-radius: 4px;
+            padding: 8px;
+            border: none;
+            background-color: #229977;
+            color: white;
+            font-size: 15px;
+        }
+
+        #prev {
+            cursor: pointer;
+            border-radius: 4px;
+            padding: 8px;
+            border: none;
+            background-color: #229977;
+            color: white;
+            font-size: 15px;
+
+        }
+
+    </style>
+</head>
+<body>
+<h2> Mathematics Questions </h2>
+<div id="quiz">
+    <p class="question" id="quiz-question">
+        THis is some random question
+    </p>
+    <div>
+        <label for="option_a" id="option_a_label">
+            Option 1
+        </label>
+        <input type="radio" id="option_a" value="a" name="option"/>
+        <label for="option_b" id="option_b_label">
+            Option 1
+        </label>
+        <input type="radio" name="option" value="b" id="option_b"/>
+        <label for="option_c" id="option_c_label">
+            Option 1
+        </label>
+        <input type="radio" name="option" value="c" id="option_c"/>
+    </div>
+</div>
+<button id="next" onclick="next()">Next</button>
+<button id="prev" onclick="prev()">Prev</button>
+<button id="submit" onclick="submit()">Get Results</button>
+
+<div id="results"></div>
+<script>
+    let answers = [];
+    let myQuestions = [
+        {
+            question: "What is 10/2?",
+            answers: {
+                a: '3',
+                b: '5',
+                c: '115'
+            },
+            correctAnswer: 'b',
+        },
+        {
+            question: "What is 30/3?",
+            answers: {
+                a: '3',
+                b: '5',
+                c: '10'
+            },
+            correctAnswer: 'c'
+
+        },
+        {
+            question: "What is 20*5?",
+            answers: {
+                a: '25',
+                b: '100',
+                c: '10'
+            },
+            correctAnswer: 'b'
+        },
+        {
+            question: 'What is 120-35?',
+            answers: {
+                a: '85',
+                b: '58',
+                c: '155'
+            },
+            correctAnswer: 'a'
+        },
+
+    ];
+    let currentQuestionIndex = 0;
+
+    let resultsContainer = document.getElementById('results');
+
+    generateQuiz();
+
+    //go to next question
+    function next() {
+        let option = document.getElementsByName("option");
+        let has_done = false;
+        for (let i = 0; i < option.length; i++) {
+            if (option[i].checked) {
+                option[i].checked = false;
+                has_done = true;
+                if (i === 0) {
+                    answers.push("a")
+                }
+                if (i === 1) {
+                    answers.push("b")
+                }
+                if (i === 2) {
+                    answers.push("c")
+                }
+            }
+        }
+        if (has_done) {
+
+            currentQuestionIndex++;
+            generateQuiz();
+
+        }
+    }
+
+    //show previous question
+    function prev() {
+
+        if (currentQuestionIndex > 0) {
+            currentQuestionIndex--;
+            generateQuiz()
+            if (answers.length > currentQuestionIndex) {
+                let options = document.getElementsByName('option')
+                let answer = answers[currentQuestionIndex]
+                if (answer === "a") {
+                    options[0].checked = true;
+
+                }
+                if (answer === "b") {
+                    options[1].checked = true;
+
+                }
+                if (answer === "c") {
+                    options[2].checked = true;
+
+                }
+            }
+        }
+
+
+    }
+
+    function showResults() {
+        if (answers.length === myQuestions.length) {
+            let correctAnswers = 0;
+            for (let i = 0; i < myQuestions.length; i++) {
+                if (answers[i] === myQuestions[i].correctAnswer) {
+                    correctAnswers++;
+                }
+            }
+            resultsContainer.innerHTML = correctAnswers + ' out of ' + myQuestions.length;
+
+        }
+    }
+
+    function submit() {
+        showResults(resultsContainer);
+
+    }
+
+    function generateQuiz() {
+
+        //show question 1,2,3,4
+        let question = myQuestions[currentQuestionIndex];
+        let questionDom = document.getElementById("quiz-question")
+        questionDom.innerHTML = question.question;
+        let optionADom = document.getElementById("option_a_label")
+        let optionBDom = document.getElementById("option_b_label")
+        let optionCDom = document.getElementById("option_c_label")
+        optionADom.innerHTML = question.answers.a;
+        optionBDom.innerHTML = question.answers.b;
+        optionCDom.innerHTML = question.answers.c;
+
+    }
+
+
+</script>
+</body>
+</html>
